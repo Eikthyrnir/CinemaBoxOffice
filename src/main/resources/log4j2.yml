@@ -29,3 +29,7 @@ Configutation:
         - ref: Console_Appender
         - ref: File_Appender
           level: debug
+
+    Logger:
+      - name: com.mchange.v2
+        level: error

@@ -148,3 +148,4 @@ target/
 
 #database credentials
 **/database.properties
+**/application.properties
