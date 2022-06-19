@@ -1,0 +1,31 @@
+Configutation:
+  name: Default
+  Properties:
+    Property:
+      name: log-path
+      value: "logs"
+  Appenders:
+    Console:
+      name: Console_Appender
+      target: SYSTEM_OUT
+      PatternLayout:
+        pattern: "%highlight{%-5level %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{3}: %3L - %m %n}"
+        disableAnsi: false
+    RollingFile:
+      name: File_Appender
+      fileName: ${log-path}${sys:file.separator}logfile.log
+      PatternLayout:
+        pattern: "%-5level %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{3}: %3L - %m %n"
+      filePattern: ${log-path}${sys:file.separator}archive${sys:file.separator}%d{yyyy-MM-dd-hh-mm-ss-SSS}.log.gz
+      Policies:
+        SizeBasedTriggeringPolicy:
+          size: 10 MB
+      DefaultRollOverStrategy:
+          max: 30
+  Loggers:
+    Root:
+      level: all
+      AppenderRef:
+        - ref: Console_Appender
+        - ref: File_Appender
+          level: debug
