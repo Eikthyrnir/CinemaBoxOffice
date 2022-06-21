@@ -1,29 +1,38 @@
 package com.timbar.uam.wmi.oop.boxoffice.domain.pos;
 
-import com.timbar.uam.wmi.oop.boxoffice.domain.Ticket;
+import com.timbar.uam.wmi.oop.boxoffice.database.repo.TicketRepo;
+import com.timbar.uam.wmi.oop.boxoffice.domain.TicketInfoUnavailableException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
+@Component
 public class Register {
 
-    private TicketCatalog ticketCatalog;
+    private final TicketRepo ticketRepo;
     private Sale sale;
 
-
-    public Register(TicketCatalog ticketCatalog) {
-        this.ticketCatalog = ticketCatalog;
+    @Autowired
+    public Register(TicketRepo ticketRepo) {
+        this.ticketRepo = ticketRepo;
     }
 
     public void makeNewSale() {
-        sale = new Sale();
+        sale = new Sale(ticketRepo);
     }
 
     public void enterTicket(int ticketId) {
-        sale.addTicket(ticketCatalog.getTicket(ticketId));
+        sale.addTicket(ticketRepo.findById(ticketId)
+                .orElseThrow(TicketInfoUnavailableException::new));
     }
 
-    public void makePayment(BigDecimal cashTendered) {
-        sale.makePayment(cashTendered);
+    public void makeCashPayment(BigDecimal cashTendered) {
+        sale.makeCashPayment(cashTendered);
+    }
+
+    public void makeCreditPayment(String creditCardNumber) {
+        sale.makeCreditPayment(creditCardNumber);
     }
 
     public Sale getSale() {
